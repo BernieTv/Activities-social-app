@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { Container } from 'semantic-ui-react';
 
 import NavBar from './NavBar';
@@ -10,6 +11,8 @@ const App = () => {
 
   return (
     <React.Fragment>
+      <ToastContainer position="bottom-right" theme="colored" />
+
       {location.pathname === '/' ? (
         <HomePage />
       ) : (
