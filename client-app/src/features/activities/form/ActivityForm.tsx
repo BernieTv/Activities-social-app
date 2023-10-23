@@ -1,8 +1,9 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Segment } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
+import { Formik, Form, Field } from 'formik';
 
 import { useStore } from '../../../app/stores/store';
 import { Activity } from '../../../app/models/activity';
@@ -36,25 +37,24 @@ const ActivityForm = observer(() => {
     }
   }, [id, loadActivity]);
 
-  const handleSubmit = () => {
-    if (!activity.id) {
-      activity.id = uuid();
+  // const handleSubmit = () => {
+  //   if (!activity.id) {
+  //     activity.id = uuid();
+  //     createActivity(activity).then(() => {
+  //       return navigate(`/activities/${activity.id}`);
+  //     });
+  //   } else {
+  //     updateActivity(activity).then(() => {
+  //       return navigate(`/activities/${activity.id}`);
+  //     });
+  //   }
+  // };
 
-      createActivity(activity).then(() => {
-        return navigate(`/activities/${activity.id}`);
-      });
-    } else {
-      updateActivity(activity).then(() => {
-        return navigate(`/activities/${activity.id}`);
-      });
-    }
-  };
+  // const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   const { name, value } = event.target;
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-
-    setActivity((prevValue) => ({ ...prevValue, [name]: value }));
-  };
+  //   setActivity((prevValue) => ({ ...prevValue, [name]: value }));
+  // };
 
   if (loadingInitial) {
     return <LoadingComponent content="Loading activity..." />;
@@ -62,48 +62,24 @@ const ActivityForm = observer(() => {
 
   return (
     <Segment clearing>
-      <Form onSubmit={handleSubmit} autoComplete="off">
-        <Form.Input
-          placeholder="Title"
-          value={activity.title}
-          name="title"
-          onChange={handleInputChange}
-        />
-        <Form.TextArea
-          placeholder="Description"
-          value={activity.description}
-          name="description"
-          onChange={handleInputChange}
-        />
-        <Form.Input
-          placeholder="Category"
-          value={activity.category}
-          name="category"
-          onChange={handleInputChange}
-        />
-        <Form.Input
-          type="date"
-          placeholder="Data"
-          value={activity.date}
-          name="date"
-          onChange={handleInputChange}
-        />
-        <Form.Input
-          placeholder="City"
-          value={activity.city}
-          name="city"
-          onChange={handleInputChange}
-        />
-        <Form.Input
-          placeholder="Venue"
-          value={activity.venue}
-          name="venue"
-          onChange={handleInputChange}
-        />
+      <Formik
+        enableReinitialize
+        initialValues={activity}
+        onSubmit={(values) => console.log(values)}>
+        {({ handleSubmit }) => (
+          <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
+            <Field placeholder="Title" name="title" />
+            <Field placeholder="Description" name="description" />
+            <Field placeholder="Category" name="category" />
+            <Field type="date" placeholder="Data" name="date" />
+            <Field placeholder="City" name="city" />
+            <Field placeholder="Venue" name="venue" />
 
-        <Button loading={loading} floated="right" positive type="submit" content="Submit" />
-        <Button floated="right" type="button" content="Cancel" as={Link} to="/activities" />
-      </Form>
+            <Button loading={loading} floated="right" positive type="submit" content="Submit" />
+            <Button floated="right" type="button" content="Cancel" as={Link} to="/activities" />
+          </Form>
+        )}
+      </Formik>
     </Segment>
   );
 });
