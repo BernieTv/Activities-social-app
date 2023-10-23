@@ -12,6 +12,7 @@ import MyTextInput from '../../../app/common/form/MyTextInput';
 import MyTextArea from '../../../app/common/form/MyTextArea';
 import MySelectInput from '../../../app/common/form/MySelectInput';
 import { categoryOptions } from '../../../app/common/form/options/categoryOptions';
+import MyDateInput from '../../../app/common/form/MyDateInput';
 
 const validationSchema = yup.object({
   title: yup.string().required('The activity title is required.'),
@@ -76,9 +77,18 @@ const ActivityForm = observer(() => {
         {({ handleSubmit }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <MyTextInput placeholder="Title" name="title" />
+
             <MyTextArea placeholder="Description" name="description" rows={3} />
             <MySelectInput placeholder="Category" name="category" options={categoryOptions} />
-            <MyTextInput placeholder="Data" name="date" />
+
+            <MyDateInput
+              placeholderText="Data"
+              name="date"
+              showTimeSelect
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:m aa"
+            />
+
             <MyTextInput placeholder="City" name="city" />
             <MyTextInput placeholder="Venue" name="venue" />
 
