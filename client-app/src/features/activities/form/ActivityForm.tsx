@@ -85,7 +85,7 @@ const ActivityForm = observer(() => {
               placeholderText="Data"
               name="date"
               showTimeSelect
-              timeCaption="time"
+              timeCaption="Time"
               dateFormat="MMMM d, yyyy h:m aa"
             />
 
