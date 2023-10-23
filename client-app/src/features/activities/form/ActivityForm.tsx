@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, Segment } from 'semantic-ui-react';
-import { v4 as uuid } from 'uuid';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 
@@ -11,6 +10,8 @@ import { Activity } from '../../../app/models/activity';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import MyTextInput from '../../../app/common/form/MyTextInput';
 import MyTextArea from '../../../app/common/form/MyTextArea';
+import MySelectInput from '../../../app/common/form/MySelectInput';
+import { categoryOptions } from '../../../app/common/form/options/categoryOptions';
 
 const validationSchema = yup.object({
   title: yup.string().required('The activity title is required.'),
@@ -23,7 +24,7 @@ const validationSchema = yup.object({
 
 const ActivityForm = observer(() => {
   const {
-    activityStore: { createActivity, updateActivity, loading, loadActivity, loadingInitial },
+    activityStore: { loading, loadActivity, loadingInitial },
   } = useStore();
 
   const [activity, setActivity] = useState<Activity>({
@@ -37,7 +38,6 @@ const ActivityForm = observer(() => {
   });
 
   const { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -62,12 +62,6 @@ const ActivityForm = observer(() => {
   //   }
   // };
 
-  // const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   const { name, value } = event.target;
-
-  //   setActivity((prevValue) => ({ ...prevValue, [name]: value }));
-  // };
-
   if (loadingInitial) {
     return <LoadingComponent content="Loading activity..." />;
   }
@@ -83,7 +77,7 @@ const ActivityForm = observer(() => {
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <MyTextInput placeholder="Title" name="title" />
             <MyTextArea placeholder="Description" name="description" rows={3} />
-            <MyTextInput placeholder="Category" name="category" />
+            <MySelectInput placeholder="Category" name="category" options={categoryOptions} />
             <MyTextInput placeholder="Data" name="date" />
             <MyTextInput placeholder="City" name="city" />
             <MyTextInput placeholder="Venue" name="venue" />
