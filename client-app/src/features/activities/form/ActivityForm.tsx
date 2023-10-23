@@ -33,7 +33,7 @@ const ActivityForm = observer(() => {
     title: '',
     category: '',
     description: '',
-    date: '',
+    date: null,
     city: '',
     venue: '',
   });
