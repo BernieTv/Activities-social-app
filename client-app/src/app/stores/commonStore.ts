@@ -27,9 +27,7 @@ export default class CommonStore {
   }
 
   setToken = (token: string | null) => {
-    if (token) {
-      this.token = token;
-    }
+    this.token = token;
   };
 
   setAppLoaded = () => {

@@ -70,6 +70,16 @@ axios.interceptors.response.use(
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
+axios.interceptors.request.use((configuration) => {
+  const token = store.commonStore.token;
+
+  if (token && configuration.headers) {
+    configuration.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return configuration;
+});
+
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: object) => axios.post<T>(url, body).then(responseBody),
