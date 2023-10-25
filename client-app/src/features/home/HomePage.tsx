@@ -3,10 +3,12 @@ import { observer } from 'mobx-react-lite';
 import { Button, Container, Header, Image, Segment } from 'semantic-ui-react';
 
 import { useStore } from '../../app/stores/store';
+import LoginForm from '../users/LoginForm';
 
 const HomePage = observer(() => {
   const {
     userStore: { isLoggedIn },
+    modalStore: { openModal },
   } = useStore();
 
   return (
@@ -25,9 +27,15 @@ const HomePage = observer(() => {
             </Button>
           </>
         ) : (
-          <Button as={Link} to="/login" size="huge" inverted>
-            Login!
-          </Button>
+          <>
+            <Button onClick={() => openModal(<LoginForm />)} size="huge" inverted>
+              Login!
+            </Button>
+
+            <Button onClick={() => openModal(<h1>Register</h1>)} size="huge" inverted>
+              Register!
+            </Button>
+          </>
         )}
       </Container>
     </Segment>

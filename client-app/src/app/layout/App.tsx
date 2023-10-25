@@ -8,6 +8,7 @@ import NavBar from './NavBar';
 import HomePage from '../../features/home/HomePage';
 import { useStore } from '../stores/store';
 import LoadingComponent from './LoadingComponent';
+import ModalContainer from '../common/modals/ModalContainer';
 
 const App = observer(() => {
   const { commonStore, userStore } = useStore();
@@ -28,6 +29,7 @@ const App = observer(() => {
 
   return (
     <React.Fragment>
+      <ModalContainer />
       <ToastContainer position="bottom-right" theme="colored" />
 
       {location.pathname === '/' ? (
