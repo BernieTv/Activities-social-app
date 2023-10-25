@@ -6,7 +6,7 @@ import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetails from '../../features/activities/details/ActivityDetails';
 import TestErrors from '../../features/errors/TestError';
 import NotFound from '../../features/errors/NotFound';
-import ServerError from '../stores/ServerError';
+import ServerError from '../../features/errors/ServerError';
 import LoginForm from '../../features/users/LoginForm';
 
 export const routes: RouteObject[] = [
