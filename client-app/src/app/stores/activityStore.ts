@@ -69,8 +69,6 @@ export default class ActivityStore {
       try {
         activity = await agent.Activities.details(id);
 
-        console.log({ activity });
-
         runInAction(() => {
           if (activity) {
             activity.date = new Date(activity.date!);
