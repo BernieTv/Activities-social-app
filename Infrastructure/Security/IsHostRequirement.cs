@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Infrastructure.Security
@@ -40,17 +40,10 @@ namespace Infrastructure.Security
                     .Value?.ToString()
             );
 
-            var attendeeTask = _dataContext.ActivityAttendees.FindAsync(userId, activityId);
-            ActivityAttendee attendee;
-
-            if (attendeeTask.IsCompletedSuccessfully)
-            {
-                attendee = attendeeTask.Result;
-            }
-            else
-            {
-                attendee = attendeeTask.AsTask().GetAwaiter().GetResult();
-            }
+            var attendee = _dataContext.ActivityAttendees
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.AppUserId == userId && x.ActivityId == activityId)
+                .Result;
 
             if (attendee == null)
             {
