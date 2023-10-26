@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import * as yup from 'yup';
 
 import { useStore } from '../../../app/stores/store';
-import { Activity } from '../../../app/models/activity';
+import { ActivityFormValues } from '../../../app/models/activity';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import MyTextInput from '../../../app/common/form/MyTextInput';
 import MyTextArea from '../../../app/common/form/MyTextArea';
@@ -26,18 +26,10 @@ const validationSchema = yup.object({
 
 const ActivityForm = observer(() => {
   const {
-    activityStore: { loading, loadActivity, loadingInitial, createActivity, updateActivity },
+    activityStore: { loadActivity, loadingInitial, createActivity, updateActivity },
   } = useStore();
 
-  const [activity, setActivity] = useState<Activity>({
-    id: '',
-    title: '',
-    category: '',
-    description: '',
-    date: null,
-    city: '',
-    venue: '',
-  });
+  const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -46,15 +38,16 @@ const ActivityForm = observer(() => {
     if (id) {
       loadActivity(id).then((activity) => {
         if (activity) {
-          setActivity(activity);
+          setActivity(new ActivityFormValues(activity));
         }
       });
     }
   }, [id, loadActivity]);
 
-  const handleFormSubmit = (activity: Activity) => {
+  const handleFormSubmit = (activity: ActivityFormValues) => {
     if (!activity.id) {
       activity.id = uuid();
+
       createActivity(activity).then(() => {
         return navigate(`/activities/${activity.id}`);
       });
@@ -98,7 +91,7 @@ const ActivityForm = observer(() => {
             <MyTextInput placeholder="Venue" name="venue" />
 
             <Button
-              loading={loading}
+              loading={isSubmitting}
               disabled={isSubmitting || !dirty || !isValid}
               floated="right"
               positive
