@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { Button, Icon, Item, Segment } from 'semantic-ui-react';
 
 import { Activity } from '../../../app/models/activity';
+import ActivityListItemAttendee from './ActivityListItemAttendee';
 
 interface Props {
   activity: Activity;
@@ -33,7 +34,9 @@ const ActivityListItem = ({ activity }: Props) => {
         </span>
       </Segment>
 
-      <Segment secondary>Attendees go here</Segment>
+      <Segment secondary>
+        <ActivityListItemAttendee attendees={activity.attendees!} />
+      </Segment>
 
       <Segment clearing>
         <span>{activity.description}</span>
