@@ -35,7 +35,7 @@ const ActivityDetails = observer(() => {
       </Grid.Column>
 
       <Grid.Column width={6}>
-        <ActivityDetailedSidebar />
+        <ActivityDetailedSidebar attendees={selectedActivity.attendees!} />
       </Grid.Column>
     </Grid>
   );
