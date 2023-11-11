@@ -6,7 +6,7 @@ using Persistence;
 
 namespace Application.Photos
 {
-    public class Delete
+    public class SetMain
     {
         public class Command : IRequest<Result<Unit>>
         {
@@ -16,17 +16,11 @@ namespace Application.Photos
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
-            private readonly IPhotoAccessor _photoAccessor;
             private readonly IUserAccessor _userAccessor;
 
-            public Handler(
-                DataContext context,
-                IPhotoAccessor photoAccessor,
-                IUserAccessor userAccessor
-            )
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 _context = context;
-                _photoAccessor = photoAccessor;
                 _userAccessor = userAccessor;
             }
 
@@ -51,19 +45,14 @@ namespace Application.Photos
                     return null;
                 }
 
-                if (photo.IsMain)
+                var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
+
+                if (currentMain != null)
                 {
-                    return Result<Unit>.Failure("You cannot delete your main photo");
+                    currentMain.IsMain = false;
                 }
 
-                var result = await _photoAccessor.DeletePhoto(photo.Id);
-
-                if (result == null)
-                {
-                    return Result<Unit>.Failure("Problem deleting photo from Cloudinary");
-                }
-
-                user.Photos.Remove(photo);
+                photo.IsMain = true;
 
                 var success = await _context.SaveChangesAsync() > 0;
 
@@ -72,7 +61,7 @@ namespace Application.Photos
                     return Result<Unit>.Success(Unit.Value);
                 }
 
-                return Result<Unit>.Failure("Problem deleting photo from API");
+                return Result<Unit>.Failure("Problem setting main photo");
             }
         }
     }
