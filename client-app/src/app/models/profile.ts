@@ -19,3 +19,9 @@ export class Profile implements IProfile {
     this.image = user.image;
   }
 }
+
+export interface Photo {
+  id: string;
+  url: string;
+  isMain: boolean;
+}
