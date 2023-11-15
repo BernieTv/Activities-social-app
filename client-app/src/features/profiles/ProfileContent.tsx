@@ -1,6 +1,14 @@
+import { observer } from 'mobx-react-lite';
 import { Tab } from 'semantic-ui-react';
 
-const ProfileContent = () => {
+import ProfilePhotos from './ProfilePhotos';
+import { Profile } from '../../app/models/profile';
+
+interface Props {
+  profile: Profile;
+}
+
+const ProfileContent = observer(({ profile }: Props) => {
   const panes = [
     {
       menuItem: 'About',
@@ -8,7 +16,7 @@ const ProfileContent = () => {
     },
     {
       menuItem: 'Photos',
-      render: () => <Tab.Pane>Photos Content</Tab.Pane>,
+      render: () => <ProfilePhotos profile={profile} />,
     },
     {
       menuItem: 'Events',
@@ -25,6 +33,6 @@ const ProfileContent = () => {
   ];
 
   return <Tab menu={{ fluid: true, vertical: true }} menuPosition="right" panes={panes} />;
-};
+});
 
 export default ProfileContent;
