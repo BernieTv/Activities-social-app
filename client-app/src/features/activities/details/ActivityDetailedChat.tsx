@@ -32,6 +32,43 @@ const ActivityDetailedChat = observer(({ activityId }: Props) => {
       </Segment>
 
       <Segment attached clearing>
+        <Formik
+          onSubmit={(values, { resetForm }) =>
+            commentStore.addComment(values).then(() => resetForm())
+          }
+          initialValues={{ body: '' }}
+          validationSchema={yup.object({
+            body: yup.string().required(),
+          })}>
+          {({ isSubmitting, isValid, handleSubmit }) => (
+            <Form className="ui form">
+              <Field name="body">
+                {(props: FieldProps) => (
+                  <div style={{ position: 'relative' }}>
+                    <Loader active={isSubmitting} />
+
+                    <textarea
+                      placeholder="Enter your comment (Enter to submit, SHIFT + enter for new line)"
+                      rows={2}
+                      {...props.field}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && e.shiftKey) {
+                          return;
+                        }
+
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          isValid && handleSubmit();
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+              </Field>
+            </Form>
+          )}
+        </Formik>
+
         <Comment.Group>
           {commentStore.comments.map((comment) => (
             <Comment key={comment.id}>
@@ -43,50 +80,13 @@ const ActivityDetailedChat = observer(({ activityId }: Props) => {
                 </Comment.Author>
 
                 <Comment.Metadata>
-                  <div>{formatDistanceToNow(Number(comment.createdAt))}</div>
+                  <div>{formatDistanceToNow(comment.createdAt)} ago</div>
                 </Comment.Metadata>
 
                 <Comment.Text style={{ whiteSpace: 'pre-wrap' }}>{comment.body}</Comment.Text>
               </Comment.Content>
             </Comment>
           ))}
-
-          <Formik
-            onSubmit={(values, { resetForm }) =>
-              commentStore.addComment(values).then(() => resetForm())
-            }
-            initialValues={{ body: '' }}
-            validationSchema={yup.object({
-              body: yup.string().required(),
-            })}>
-            {({ isSubmitting, isValid, handleSubmit }) => (
-              <Form className="ui form">
-                <Field name="body">
-                  {(props: FieldProps) => (
-                    <div style={{ position: 'relative' }}>
-                      <Loader active={isSubmitting} />
-
-                      <textarea
-                        placeholder="Enter your comment (Enter to submit, SHIFT + enter for new line)"
-                        rows={2}
-                        {...props.field}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && e.shiftKey) {
-                            return;
-                          }
-
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            isValid && handleSubmit();
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-                </Field>
-              </Form>
-            )}
-          </Formik>
         </Comment.Group>
       </Segment>
     </React.Fragment>

@@ -12,7 +12,7 @@ import ActivityDetailedSidebar from './ActivityDetailedSidebar';
 
 const ActivityDetails = observer(() => {
   const {
-    activityStore: { selectedActivity, loadActivity, loadingInitial },
+    activityStore: { selectedActivity, loadActivity, loadingInitial, clearSelectedActivity },
   } = useStore();
   const { id } = useParams();
 
@@ -20,7 +20,11 @@ const ActivityDetails = observer(() => {
     if (id) {
       loadActivity(id);
     }
-  }, [id, loadActivity]);
+
+    return () => {
+      clearSelectedActivity();
+    };
+  }, [id, loadActivity, clearSelectedActivity]);
 
   if (loadingInitial || !selectedActivity) {
     return <LoadingComponent />;
