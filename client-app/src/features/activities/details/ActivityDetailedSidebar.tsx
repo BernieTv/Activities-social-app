@@ -42,7 +42,10 @@ const ActivityDetailedSidebar = observer(({ activity: { attendees, host } }: Pro
                 <Item.Header as="h3">
                   <Link to={`/profiles/${attendee.username}`}>{attendee.displayName}</Link>
                 </Item.Header>
-                <Item.Extra style={{ color: 'orange' }}>Foll owing</Item.Extra>
+
+                {attendee.following ? (
+                  <Item.Extra style={{ color: 'orange' }}>Following</Item.Extra>
+                ) : null}
               </Item.Content>
             </Item>
           ))}
