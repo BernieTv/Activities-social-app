@@ -29,7 +29,7 @@ export class Activity implements IActivity {
   isGoing: boolean = false;
   isHost: boolean = false;
   host?: Profile;
-  attendees?: Profile[];
+  attendees: Profile[] = [];
 
   constructor(init: ActivityFormValues) {
     this.id = init.id!;
