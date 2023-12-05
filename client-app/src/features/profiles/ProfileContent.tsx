@@ -5,12 +5,17 @@ import ProfilePhotos from './ProfilePhotos';
 import { Profile } from '../../app/models/profile';
 import ProfileAbout from './ProfileAbout';
 import ProfileFollowings from './ProfileFollowings';
+import { useStore } from '../../app/stores/store';
 
 interface Props {
   profile: Profile;
 }
 
 const ProfileContent = observer(({ profile }: Props) => {
+  const {
+    profileStore: { setActiveTab },
+  } = useStore();
+
   const panes = [
     {
       menuItem: 'About',
@@ -34,7 +39,14 @@ const ProfileContent = observer(({ profile }: Props) => {
     },
   ];
 
-  return <Tab menu={{ fluid: true, vertical: true }} menuPosition="right" panes={panes} />;
+  return (
+    <Tab
+      menu={{ fluid: true, vertical: true }}
+      menuPosition="right"
+      panes={panes}
+      onTabChange={(_, data) => setActiveTab(data.activeIndex as number)}
+    />
+  );
 });
 
 export default ProfileContent;
