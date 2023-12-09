@@ -5,9 +5,9 @@ import { Grid, Loader } from 'semantic-ui-react';
 
 import ActivityList from './ActivityList';
 import { useStore } from '../../../app/stores/store';
-import LoadingComponent from '../../../app/layout/LoadingComponent';
 import ActivityFilters from './ActivityFilters';
 import { PagingParams } from '../../../app/models/pagination';
+import ActivityListItemPlaceholder from './ActivityListItemPlaceholder';
 
 const ActivityDashboard = observer(() => {
   const [loadingNext, setLoadingNext] = useState(false);
@@ -38,20 +38,23 @@ const ActivityDashboard = observer(() => {
     loadActivities().then(() => setLoadingNext(false));
   };
 
-  if (loadingInitial && !loadingNext) {
-    return <LoadingComponent content="Loading activities..." />;
-  }
-
   return (
     <Grid>
       <Grid.Column width="10">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={handleGetNext}
-          hasMore={!loadingNext && !!pagination && pagination.currentPage < pagination.totalItems}
-          initialLoad={false}>
-          <ActivityList />
-        </InfiniteScroll>
+        {loadingInitial && activityRegistry.size === 0 && !loadingNext ? (
+          <>
+            <ActivityListItemPlaceholder />
+            <ActivityListItemPlaceholder />
+          </>
+        ) : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={handleGetNext}
+            hasMore={!loadingNext && !!pagination && pagination.currentPage < pagination.totalItems}
+            initialLoad={false}>
+            <ActivityList />
+          </InfiniteScroll>
+        )}
       </Grid.Column>
 
       <Grid.Column width={6}>
