@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { ToastContainer } from 'react-toastify';
 import { Container } from 'semantic-ui-react';
@@ -29,6 +29,7 @@ const App = observer(() => {
 
   return (
     <React.Fragment>
+      <ScrollRestoration />
       <ModalContainer />
       <ToastContainer position="bottom-right" theme="colored" />
 
