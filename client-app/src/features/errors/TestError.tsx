@@ -5,32 +5,30 @@ import { Button, Header, Segment } from 'semantic-ui-react';
 import ValidationError from './ValidationError';
 
 const TestErrors = () => {
-  const baseUrl = import.meta.env.VITE_API_URL;
-
   const [errors, setErrors] = useState(null);
 
   function handleNotFound() {
-    axios.get(baseUrl + 'buggy/not-found').catch((err) => console.log(err.response));
+    axios.get('/buggy/not-found').catch((err) => console.log(err.response));
   }
 
   function handleBadRequest() {
-    axios.get(baseUrl + 'buggy/bad-request').catch((err) => console.log(err.response));
+    axios.get('/buggy/bad-request').catch((err) => console.log(err.response));
   }
 
   function handleServerError() {
-    axios.get(baseUrl + 'buggy/server-error').catch((err) => console.log(err.response));
+    axios.get('/buggy/server-error').catch((err) => console.log(err.response));
   }
 
   function handleUnauthorized() {
-    axios.get(baseUrl + 'buggy/unauthorized').catch((err) => console.log(err.response));
+    axios.get('/buggy/unauthorized').catch((err) => console.log(err.response));
   }
 
   function handleBadGuid() {
-    axios.get(baseUrl + 'activities/notaguid').catch((err) => console.log(err));
+    axios.get('/activities/notaguid').catch((err) => console.log(err));
   }
 
   function handleValidationError() {
-    axios.post(baseUrl + 'activities', {}).catch((err) => setErrors(err));
+    axios.post('/activities', {}).catch((err) => setErrors(err));
   }
 
   return (
