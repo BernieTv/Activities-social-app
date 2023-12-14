@@ -9,7 +9,7 @@ import RegisterForm from '../users/RegisterForm';
 
 const HomePage = observer(() => {
   const {
-    userStore: { isLoggedIn },
+    userStore: { isLoggedIn, facebookLogin, fbLoading },
     modalStore: { openModal },
   } = useStore();
 
@@ -45,12 +45,13 @@ const HomePage = observer(() => {
             <FacebookLogin
               appId="334148852712724"
               onSuccess={(response: SuccessResponse) => {
-                console.log('Login success!', response);
+                console.log(response);
+                facebookLogin(response.accessToken);
               }}
               onFail={(response: FailResponse) => {
                 console.log('Login failed!', response);
               }}
-              className="ui button facebook huge inverted"
+              className={`ui button facebook huge inverted ${fbLoading && 'loading'}`}
             />
           </>
         )}
