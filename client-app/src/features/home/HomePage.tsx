@@ -45,7 +45,8 @@ const HomePage = observer(() => {
             <FacebookLogin
               appId="334148852712724"
               onSuccess={(response: SuccessResponse) => {
-                console.log(response);
+                console.log('Login success!', response);
+
                 facebookLogin(response.accessToken);
               }}
               onFail={(response: FailResponse) => {
