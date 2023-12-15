@@ -26,10 +26,32 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseXContentTypeOptions();
+app.UseReferrerPolicy(opt => opt.NoReferrer());
+app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
+app.UseXfo(opt => opt.Deny());
+app.UseCsp(opt => opt
+    .BlockAllMixedContent()
+    .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com", "sha256-DpOoqibK/BsYhobWHnU38Pyzt5SjDZuR/mFsAiVN7kk="))
+    .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+    .FormActions(s => s.Self())
+    .FrameAncestors(s => s.Self())
+    .ImageSources(s => s.Self().CustomSources("blob:", "data:", "https://res.cloudinary.com", "https://platform-lookaside.fbsbx.com"))
+    .ScriptSources(s => s.Self().CustomSources("https://connect.facebook.net"))
+);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Append("Strict-Transport-Security", "max-age=31536000");
+        await next.Invoke();
+    });
 }
 
 app.UseAuthentication();
