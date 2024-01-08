@@ -16,6 +16,7 @@ const RegisterSuccess = () => {
         console.log(error);
       });
   };
+
   return (
     <Segment placeholder textAlign="center">
       <Header icon color="green">
