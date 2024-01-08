@@ -31,15 +31,14 @@ export default class UserStore {
   };
 
   register = async (credentials: UserFormValues) => {
-    const user = await agent.Account.register(credentials);
+    try {
+      await agent.Account.register(credentials);
 
-    store.commonStore.setToken(user.token);
-    this.startRefreshTokenTimer(user);
-
-    store.modalStore.closeModal();
-    runInAction(() => (this.user = user));
-
-    router.navigate('/activities');
+      store.modalStore.closeModal();
+      router.navigate(`/account/registerSuccess?email=${credentials.email}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   logout = () => {
@@ -121,7 +120,7 @@ export default class UserStore {
   private startRefreshTokenTimer(user: User) {
     const jwtToken = JSON.parse(atob(user.token.split('.')[1]));
     const expires = new Date(jwtToken.exp * 1000);
-    const timeout = expires.getTime() - Date.now() - 30 * 1000;
+    const timeout = expires.getTime() - Date.now() - 60 * 1000;
 
     this.refreshTokenTimeout = setTimeout(this.refreshToken, timeout);
 

@@ -14,7 +14,7 @@ const LoginForm = observer(() => {
     <Formik
       initialValues={{ email: '', password: '', error: null }}
       onSubmit={(values, { setErrors }) =>
-        login(values).catch(() => setErrors({ error: 'Invalid email or password' }))
+        login(values).catch((error) => setErrors({ error: error.response.data }))
       }>
       {({ handleSubmit, isSubmitting, errors }) => (
         <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
