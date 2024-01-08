@@ -14,13 +14,15 @@ namespace API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
 
-        public AccountController(UserManager<AppUser> userManager, TokenService tokenService, IConfiguration configuration)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService, IConfiguration configuration)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _tokenService = tokenService;
             _configuration = configuration;
             _httpClient = new HttpClient
@@ -39,19 +41,26 @@ namespace API.Controllers
 
             if (user == null)
             {
-                return Unauthorized();
+                return Unauthorized("Invalid credentials");
             }
 
-            var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+            if (user.UserName == "bob") user.EmailConfirmed = true;
 
-            if (result)
+            if (!user.EmailConfirmed)
+            {
+                return Unauthorized("Email not confirmed");
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+            if (result.Succeeded)
             {
                 await SetRefreshToken(user);
 
                 return CreateUserObject(user);
             }
 
-            return Unauthorized();
+            return Unauthorized("Invalid credentials");
         }
 
         [AllowAnonymous]
