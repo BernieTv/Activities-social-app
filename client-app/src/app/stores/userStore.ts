@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { User, UserFormValues } from '../models/user';
@@ -36,8 +37,13 @@ export default class UserStore {
 
       store.modalStore.closeModal();
       router.navigate(`/account/registerSuccess?email=${credentials.email}`);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error) {
-      console.log(error);
+      if (isAxiosError(error) && error?.response?.status === 400) throw error;
+
+      store.modalStore.closeModal();
+      console.log(500);
     }
   };
 
